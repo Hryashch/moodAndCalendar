@@ -66,10 +66,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           TextButton(
             onPressed: (){
-              _scrollToCurrentMonth();
 
               _focusedDay = DateTime.now();
               _selectedDay = DateTime.now();
+              _scrollToCurrentMonth();
               setState(() {
                 
               });

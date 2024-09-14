@@ -128,7 +128,7 @@ class _MoodJournalScreenState extends State<MoodJournalScreen> {
           ),
           
           SizedBox(
-            height: 170,
+            height: 150,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
