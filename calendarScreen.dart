@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moodncalendar/moodScreen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -32,7 +33,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void _scrollToCurrentMonth() {
     int currentIndex = _focusedDay.month - 1; 
     // double itemHeight = 300.0;
-    double itemHeight = MediaQuery.of(context).size.height / 1.8; 
+    double itemHeight = MediaQuery.of(context).size.width /1.2; 
 
     _scrollController.jumpTo(currentIndex * itemHeight);
   }
@@ -42,17 +43,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: (){
-            _isYearView = !_isYearView;
-            _scrollToCurrentMonth();
-            setState(() {
-              
-            });
             Navigator.popUntil(context, (route) => route.isFirst);
           },
           icon: const Icon(Icons.close),
         ),
         title: const Text('Календарь'),
         actions: [
+          IconButton(
+            onPressed: (){
+              showDialog(context: context,
+                builder: (_) {
+                  return const AlertDialog(
+                    title: Text('Справка'),
+                    content: Text('Для открытия страницы календаря настроения другого дня нажмите и удерживаете кноку другой даты в календаре.\n\n\nЖестом можно приближать и отдалять вид календаря.'),
+                  );
+                } 
+                
+                );
+            },
+            icon: const Icon(FontAwesomeIcons.question),
+            tooltip: 'Справка',
+          ),
           TextButton(
             onPressed: (){
               _scrollToCurrentMonth();
@@ -63,7 +74,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 
               });
             },
-            child: Text('Сегодня'))
+            child: const Text('Сегодня')
+          ),
         ],
       ),
       body: 
@@ -71,9 +83,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         onScaleUpdate: (details) {
           setState(() {
             _scaleFactor = details.scale;
-            if (_scaleFactor < 0.8) {
+            if (_scaleFactor < 0.8 && !_isYearView) {
               _isYearView = true;
-            } else if (_scaleFactor > 1.2) {
+            } else if (_scaleFactor > 1.2 && _isYearView) {
               _isYearView = false;
             }
             _scrollToCurrentMonth();
@@ -149,7 +161,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 shape: BoxShape.circle,
               ),
               outsideDaysVisible: false,
-              cellMargin: EdgeInsets.all(1),
+              cellMargin: const EdgeInsets.all(1),
               
             ),
             headerStyle: HeaderStyle(
@@ -183,7 +195,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double gridChildHeight = constraints.maxWidth / 1.15; // Определите высоту элемента в зависимости от доступной ширины
+          double gridChildHeight = constraints.maxWidth / 1.15;
 
           return GridView.builder(
             controller: _scrollController,
@@ -199,7 +211,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               final month = DateTime(_focusedDay.year, index + 1, 1);
 
               return Container(
-                height: gridChildHeight, // Установите высоту для элемента
+                height: gridChildHeight, 
                 child: _buildMonthView(month),
               );
             },
